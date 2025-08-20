@@ -26,8 +26,8 @@ class CountryService {
                 throw errorFinded
             }
         }
-        
-        return try JSONDecoder().decode([Country].self, from: data)
+        throw CountryServiceError.badRequest
+        //return try JSONDecoder().decode([Country].self, from: data)
     }
     
     private func parseError(data: Data, statusCode: Int) -> CountryServiceError {
@@ -48,7 +48,7 @@ enum CountryServiceError: String, Error {
 }
 
 extension CountryServiceError: LocalizedError {
-    var errorDescription: String? {
+     public var errorDescription: String? {
         switch self {
         case .notToken:
             return "bad Token"
