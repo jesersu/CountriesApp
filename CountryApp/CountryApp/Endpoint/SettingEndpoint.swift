@@ -12,9 +12,9 @@ struct SettingEndpoint {
         var urlString: String {
             switch self {
             case .preProduction:
-                return "https://restcountries.com/v3/"
+                return "https://restcountries.com/v3"
             case .production:
-                return "https://restcountries.com/v3.1/"
+                return "https://restcountries.com/v3.1"
             }
         }
     }

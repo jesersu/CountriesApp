@@ -11,7 +11,7 @@ struct Endpoint {
         return SettingEndpoint.getUrl()
     }
     
-    struct getAllCountries {
+    struct getAllCountriesURL {
         static var url: String {
             "\(urlBase.urlString)/all?fields=name,flags,capital,cca2"
         }
