@@ -26,7 +26,13 @@ struct Endpoint {
         static let key = "getCountriesById"
         static var ttl = 0
     }
-
     
+    struct getCountriesByNameURL {
+        static var url: String {
+            "\(urlBase.urlString)/name/{name}?fields=name,flags,capital,cca2"
+        }
+        static let key = "getCountriesByNameURL"
+        static var ttl = 0
+    }
 }
     

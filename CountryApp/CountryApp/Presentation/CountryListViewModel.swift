@@ -8,13 +8,19 @@
 import Foundation
 import Combine
 
+@MainActor
 class CountryListViewModel: ObservableObject {
     @Published var allCountries: [Country] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    
+    //Detail
     @Published var fetchedCountry: Country?
     @Published var isFetchingCountry: Bool = false
 
+    //Search
+    @Published var filteredCountries: [Country] = []
+    
     private let countryRepository: CountryRepositoryProtocol
     private var didSetInitialCountry = false
     private var cancellables = Set<AnyCancellable>()
@@ -24,13 +30,13 @@ class CountryListViewModel: ObservableObject {
         self.countryRepository = countryRepository
     }
     
-    @MainActor
     func getAllCountries() async {
         isLoading = true
         self.errorMessage = nil
         do {
             let countries = try await countryRepository.getAllCountries()
             self.allCountries = countries.sorted { $0.name.common < $1.name.common }
+            self.filteredCountries = self.allCountries
         } catch {
             recieveError(error)
             print("Failed fetchCountries() in CountryListViewModel: \(error)")
@@ -38,7 +44,6 @@ class CountryListViewModel: ObservableObject {
         isLoading = false
     }
     
-    @MainActor
     func getCountryById(id:String) async {
         isFetchingCountry = true
         self.errorMessage = nil
@@ -48,9 +53,24 @@ class CountryListViewModel: ObservableObject {
             self.fetchedCountry = country
         } catch {
             recieveError(error)
-            print("❌ Failed getCountrieByName() in CountryListViewModel: \(error)")
+            print("Failed getCountrieById() in CountryListViewModel: \(error)")
         }
         isFetchingCountry = false
+    }
+
+   
+    func getCountryByName(name: String) async {
+        guard name.count > 1 else {   // Ensure the name has more than 1 character
+            self.filteredCountries = self.allCountries
+            return
+        }
+        do {
+            let countriesFiltered = try await countryRepository.getCountriesByName(name: name)
+            self.filteredCountries = countriesFiltered.sorted { $0.name.common < $1.name.common }
+        } catch {
+            recieveError(error)
+            print("Failed getCountryByName() in CountryListViewModel: \(error)")
+        }
     }
     
     func recieveError(_ error: Error) {
