@@ -62,7 +62,6 @@ class CountryListViewModel: ObservableObject {
         isFetchingCountry = false
     }
 
-   
     func getCountryByName(name: String) async {
         guard name.count > 1 else {   // Ensure the name has more than 1 character
             self.filteredCountries = self.allCountries
@@ -93,7 +92,6 @@ class CountryListViewModel: ObservableObject {
     private func updateFavorites() {
         favorites = allCountries.filter { favoriteCodes.contains($0.id) }
     }
-    
     
     func recieveError(_ error: Error) {
         if let error = error as? CountryServiceError, error == .badRequest {

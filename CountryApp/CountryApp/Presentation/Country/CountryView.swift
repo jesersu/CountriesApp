@@ -22,14 +22,11 @@ struct CountryView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("Search country...", text: $searchText)
-                   .textFieldStyle(RoundedBorderTextFieldStyle())
-                   .padding(.horizontal)
-                   .onChange(of: searchText) {
-                       Task {
-                           await viewModel.getCountryByName(name: searchText)
-                       }
+                SearchView(searchText: $searchText) { query in
+                   Task {
+                       await viewModel.getCountryByName(name: query)
                    }
+               }
                 
                 if viewModel.isLoading {
                     LoadingView()
