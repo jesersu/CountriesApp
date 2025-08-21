@@ -21,6 +21,10 @@ class CountryListViewModel: ObservableObject {
     //Search
     @Published var filteredCountries: [Country] = []
     
+    //Favorites
+    @Published var favorites: [Country] = []
+    private var favoriteCodes: Set<String> = []
+    
     private let countryRepository: CountryRepositoryProtocol
     private var didSetInitialCountry = false
     private var cancellables = Set<AnyCancellable>()
@@ -72,6 +76,24 @@ class CountryListViewModel: ObservableObject {
             print("Failed getCountryByName() in CountryListViewModel: \(error)")
         }
     }
+    
+    func toggleFavorite(for country: Country) {
+        if favoriteCodes.contains(country.id) {
+            favoriteCodes.remove(country.id)
+        } else {
+            favoriteCodes.insert(country.id)
+        }
+        updateFavorites()
+    }
+
+    func isFavorite(_ country: Country) -> Bool {
+        favoriteCodes.contains(country.id)
+    }
+
+    private func updateFavorites() {
+        favorites = allCountries.filter { favoriteCodes.contains($0.id) }
+    }
+    
     
     func recieveError(_ error: Error) {
         if let error = error as? CountryServiceError, error == .badRequest {

@@ -12,7 +12,7 @@ struct CountryAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: CountryListViewModel(countryRepository: CountryRepository()))
+            MainView()
                 
         }
     }
