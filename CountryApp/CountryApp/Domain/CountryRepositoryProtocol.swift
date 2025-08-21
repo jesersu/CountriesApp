@@ -10,4 +10,5 @@ import Foundation
 protocol CountryRepositoryProtocol {
     func getAllCountries() async throws -> [Country]
     func getCountriesById(id : String) async throws -> Country
+    func getCountriesByName(name : String) async throws -> [Country]
 }
