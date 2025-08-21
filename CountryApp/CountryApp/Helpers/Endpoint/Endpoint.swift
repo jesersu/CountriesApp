@@ -15,10 +15,17 @@ struct Endpoint {
         static var url: String {
             "\(urlBase.urlString)/all?fields=name,flags,capital,cca2"
         }
-        static let key = "DeletePaymentMethod"
-        static var ttl = 0 // Segundos
+        static let key = "getAllCountries"
+        static var ttl = 0
     }
     
+    struct getCountriesByIdURL {
+        static var url: String {
+            "\(urlBase.urlString)/alpha/{name}?fields=name,flags,coatOfArms,region,subregion,capital,area,population,languages,car,currencies,timezones,cca2"
+        }
+        static let key = "getCountriesById"
+        static var ttl = 0
+    }
 
     
 }

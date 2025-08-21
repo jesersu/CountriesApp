@@ -9,9 +9,8 @@ import Foundation
 
 class CountryService {
     
-    private let url = URL(string: Endpoint.getAllCountriesURL.url)!
-    
     func fetchAllCountries() async throws -> [Country] {
+        let url = URL(string: Endpoint.getAllCountriesURL.url)!
         print("url : \(url)")
         let (data, response) = try await URLSession.shared.data(from: url)
        
@@ -26,8 +25,28 @@ class CountryService {
                 throw errorFinded
             }
         }
-        throw CountryServiceError.badRequest
-        //return try JSONDecoder().decode([Country].self, from: data)
+        //throw CountryServiceError.badRequest
+        return try JSONDecoder().decode([Country].self, from: data)
+    }
+    
+     func getCountryById(id: String) async throws -> Country {
+         let url = URL(string: Endpoint.getCountriesByIdURL.url.replacingOccurrences(of: "{name}", with: id))!
+         print("url : \(url)")
+         let (data, response) = try await URLSession.shared.data(from: url)
+        
+         if let httResponse = response as? HTTPURLResponse {
+             let statusCode = httResponse.statusCode
+             
+             switch statusCode {
+                 case 200...299:
+                     break;
+             default:
+                 let errorFinded = parseError(data: data, statusCode: statusCode)
+                 throw errorFinded
+             }
+         }
+         //throw CountryServiceError.badRequest
+         return try JSONDecoder().decode(Country.self, from: data)
     }
     
     private func parseError(data: Data, statusCode: Int) -> CountryServiceError {
