@@ -34,6 +34,8 @@ class CountryListViewModel: ObservableObject {
         self.countryRepository = countryRepository
     }
     
+    
+    /// Retrieve all countries
     func getAllCountries() async {
         isLoading = true
         self.errorMessage = nil
@@ -48,6 +50,8 @@ class CountryListViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// Retrieve country by id
+    /// - Parameter id: ID of the country to search for
     func getCountryById(id:String) async {
         isFetchingCountry = true
         self.errorMessage = nil
@@ -62,6 +66,9 @@ class CountryListViewModel: ObservableObject {
         isFetchingCountry = false
     }
 
+    
+    /// Retrieve countries by name
+    /// - Parameter name: Name of the country to search for
     func getCountryByName(name: String) async {
         guard name.count > 1 else {   // Ensure the name has more than 1 character
             self.filteredCountries = self.allCountries
@@ -76,6 +83,9 @@ class CountryListViewModel: ObservableObject {
         }
     }
     
+    
+    /// Toggle favorite status for a country
+    /// - Parameter country: Country object to toggle
     func toggleFavorite(for country: Country) {
         if favoriteCodes.contains(country.id) {
             favoriteCodes.remove(country.id)
@@ -85,14 +95,21 @@ class CountryListViewModel: ObservableObject {
         updateFavorites()
     }
 
+    
+    /// Check if a country is marked as favorite
+    /// - Parameter country: Country object to check
+    /// - Returns: Boolean indicating if the country is a favorite
     func isFavorite(_ country: Country) -> Bool {
         favoriteCodes.contains(country.id)
     }
-
+    
+    /// Update favorites based on the current favorite codes
     private func updateFavorites() {
         favorites = allCountries.filter { favoriteCodes.contains($0.id) }
     }
     
+    /// Handle errors received from the service
+    /// - Parameter error: Error object received from the service
     func recieveError(_ error: Error) {
         if let error = error as? CountryServiceError, error == .badRequest {
             self.errorMessage = error.errorDescription ?? "Error Message: Bad Request"
