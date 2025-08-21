@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Country: Codable, Identifiable, Equatable {
+struct Country: Codable, Identifiable, Equatable, Hashable {
     //Creamos los campos necesarios de a cuerdo al PDF de ejemplo
     let id: String
     let cca2: String
     let name: Name
     let flags: Flag?
-    let coatOfArms: String?
+    let coatOfArms: CoatOfArms?
     let region: String?
     let subregion: String?
     let capital: [String]?
@@ -24,28 +24,28 @@ struct Country: Codable, Identifiable, Equatable {
     let currencies: [String: Currency]?
     let timezones: [String]?
     
-    struct Name: Codable, Equatable {
+    struct Name: Codable, Equatable, Hashable {
         let common: String
         let official: String
     }
     
-    struct Flag: Codable, Equatable {
+    struct Flag: Codable, Equatable, Hashable {
         let png: String?
         let svg: String?
         let alt: String?
     }
     
-    struct CoatOfArms: Codable, Equatable {
+    struct CoatOfArms: Codable, Equatable, Hashable {
         let png: String?
         let svg: String?
     }
     
-    struct Car: Codable, Equatable {
+    struct Car: Codable, Equatable, Hashable {
         let signs: [String]?
         let side: String?
     }
     
-    struct Currency: Codable, Equatable {
+    struct Currency: Codable, Equatable, Hashable {
         let name: String?
         let symbol: String?
     }
@@ -58,7 +58,7 @@ struct Country: Codable, Identifiable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decode(Name.self, forKey: .name)
         self.flags = try? container.decode(Flag.self, forKey: .flags)
-        self.coatOfArms = try? container.decode(String.self, forKey: .coatOfArms)
+        self.coatOfArms = try? container.decode(CoatOfArms.self, forKey: .coatOfArms)
         self.region = try? container.decode(String.self, forKey: .region)
         self.subregion = try? container.decode(String.self, forKey: .subregion)
         self.capital = try? container.decode([String].self, forKey: .capital)
@@ -72,7 +72,7 @@ struct Country: Codable, Identifiable, Equatable {
         self.id = self.cca2
     }
     
-    init(id: String, cca2: String, name: Name, flags: Flag?, coatOfArms: String?, region: String?, subregion: String?, capital: [String]?, area: Double?, population: Int?, languages: [String: String]?, car: Car?, currencies: [String: Currency]?, timezones: [String]?) {
+    init(id: String, cca2: String, name: Name, flags: Flag?, coatOfArms: CoatOfArms?, region: String?, subregion: String?, capital: [String]?, area: Double?, population: Int?, languages: [String: String]?, car: Car?, currencies: [String: Currency]?, timezones: [String]?) {
         self.id = id
         self.cca2 = cca2
         self.name = name
